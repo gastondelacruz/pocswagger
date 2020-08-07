@@ -1,0 +1,130 @@
+swagger: "2.0"
+info:
+  description: "This is a POC to test if this can be implemented in mercadolibre midleware and backend services"
+  version: "1.0.0"
+  title: "Swagger Employee service"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "gaston.delacruz@mercadolibre.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "mercadolibre-poc"
+basePath: "/v1"
+tags:
+  - name: "employee"
+    description: "Everything about your Employees"
+    externalDocs:
+      description: "Find out more"
+      url: "http://swagger.io"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /employee:
+    post:
+      tags:
+        - "employee"
+      summary: "Create a new employee"
+      description: "If you use this service you can creaste a new employee"
+      operationId: "x"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Employee object model"
+          required: true
+          schema:
+            $ref: "#/definitions/Employee"
+      responses:
+        "200":
+          description: "successful operation"
+        "405":
+          description: "Invalid input"
+      security:
+        - employee_auth:
+            - "write:employee"
+            - "read:employee"
+  /employees:
+    get:
+      tags:
+        - "employee"
+      summary: "Get all the eployees"
+      description: "If you use this service you can get all the employees"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Employee"
+        "400":
+          description: "Invalid status value"
+      security:
+        - employee_auth:
+            - "write:employee"
+            - "read:employee"
+  /employees/{employeeId}:
+    get:
+      tags:
+        - "employee"
+      summary: "Get a particular employee by id"
+      description: "If you use this service you can get a particular employee by id"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "employeeId"
+          in: "path"
+          description: "ID of employee to return"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Employee"
+        "400":
+          description: "Invalid status value"
+      security:
+        - employee_auth:
+            - "write:employee"
+            - "read:employee"
+
+
+
+securityDefinitions:
+  employee_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:employee: "modify employee in your account"
+      read:employee: "read your employees"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Employee:
+    type: "object"
+    required:
+      - "name"
+      - "role"
+    properties:
+      name:
+        type: "string"
+        example: "test Employee"
+      role:
+        type: "string"
+        description: "employee role"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
